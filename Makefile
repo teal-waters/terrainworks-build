@@ -1,13 +1,16 @@
+# I don't know if ifx/ifort was previously used but it seems to function better with
+# the existing codebase than gfortran. 
+# Note that /opt/intel/oneapi/setvars.sh (locally) needs to be called before
+# running ifx, but I think it can only be called once.
 FC = ifx
 MOD_OUT = built_mods
 # Most of these flags are the recommended ones. A couple notes though for ifx:
-# 1. -qmkl includes the lapack95 library shipped with ifx
-# 2. -assume byterecl is needed in the tiff (and perhaps flt) opening routines or
+# 1. `-qmkl` includes the lapack95 library shipped with ifx
+# 2. `-assume byterecl` is needed in the tiff (and perhaps flt) opening routines or
 #    the data are loaded as bytes, not longwords (4 byte units). This makes the outputs
-#    of e.g. MakeGrids unreadable
-FFLAGS = -O2 -c -fpp -nowarn -check bounds -traceback -I modules -I modules/OrderPack \
+#    of e.g. MakeGrids unreadable because they have 128 bit data rather than 32.
+FFLAGS = -O2 -fpp -nowarn -check bounds -traceback -I modules -I modules/OrderPack \
 				 -I $(MOD_OUT) -module built_mods -qmkl -assume byterecl
-
 
 # For now, everything that goes into MakeGrids. Unfortunately there are some modules
 # that can't compile, I think because they are out of sync with the rest of the code,
@@ -23,23 +26,30 @@ MODULES = modules/data_modules.f90 modules/error_handler.f90 modules/Utilities.f
 					modules/OrderPack/refsor.f90 modules/OrderPack/mrgrnk.f90 \
 					GridUtilities/MakeGrids.f90
 
-SRC = $(MODULES)
-
-MODULE_OBJS = $(SRC:.f90=.o)
+MODULE_OBJS = $(MODULES:.f90=.o)
 
 DEPS_FILE = deps.mk
 
 # lapack should not be hardcoded here
 MakeGrids: $(DEPS_FILE) $(MODULE_OBJS)
-	ifx -O2  -fpp -nowarn -check bounds -traceback -I /opt/intel/oneapi/2025.1/lib  -I modules -I modules/OrderPack -I built_mods -module built_mods -qmkl modules/OrderPack/*.o  modules/*.o /opt/intel/oneapi/2025.1/lib/libmkl_lapack95_ilp64.a GridUtilities/MakeGrids.o -o MakeGrids
+	$(FC) $(FFLAGS) $(MOD_OUT).o
+		/opt/intel/oneapi/2025.1/lib/libmkl_lapack95_ilp64.a \
+		-o MakeGrids
 
 include $(DEPS_FILE)
 
 %.o: %.f90
-	$(FC) $(FFLAGS) $< -o $@
+	# -c is to indicate we're building a module.
+	$(FC) -c $(FFLAGS) $< -o $(MOD_OUT)/$(notdir $@)
 
-$(DEPS_FILE): $(SRC)
-	makedepf90 -I GridUtilites -I modules -I modules/OrderPack $(SRC) > $(DEPS_FILE)
+# makedepf90 only calculates dependencies using things in SRC. So even though
+# we only need e.g. MakeGrids.o and its dependencies, it won't find them
+# unless we include all of them. Ideally we could just include modules/*.f90
+# but there were some modules that didn't build, and I think they may be deprecated.
+# A future solution may be to just include modules in the active branch that are
+# actually up to date.
+$(DEPS_FILE): $(MODULES)
+	makedepf90 -I GridUtilites -I modules -I modules/OrderPack $(MODULES) > $(DEPS_FILE)
 
 clean:
 	rm -f modules/*.o GridUtilities/*.o modules/OrderPack/*.o built_mods/*
