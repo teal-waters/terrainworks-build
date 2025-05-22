@@ -4,6 +4,7 @@
 # running ifx, but I think it can only be called once.
 FC = ifx
 MOD_OUT = built_mods
+mkdir -p $(MOD_OUT)
 # Most of these flags are the recommended ones. A couple notes though for ifx:
 # 1. `-qmkl` includes the lapack95 library shipped with ifx
 # 2. `-assume byterecl` is needed in the tiff (and perhaps flt) opening routines so 
