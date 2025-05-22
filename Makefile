@@ -6,9 +6,10 @@ FC = ifx
 MOD_OUT = built_mods
 # Most of these flags are the recommended ones. A couple notes though for ifx:
 # 1. `-qmkl` includes the lapack95 library shipped with ifx
-# 2. `-assume byterecl` is needed in the tiff (and perhaps flt) opening routines or
+# 2. `-assume byterecl` is needed in the tiff (and perhaps flt) opening routines so 
 #    the data are loaded as bytes, not longwords (4 byte units). This makes the outputs
-#    of e.g. MakeGrids unreadable because they have 128 bit data rather than 32.
+#    of e.g. MakeGrids unreadable (and 4x as large) because they have 128 bit data 
+#    rather than 32.
 FFLAGS = -O2 -fpp -nowarn -check bounds -traceback -I modules -I modules/OrderPack \
 				 -I $(MOD_OUT) -module built_mods -qmkl -assume byterecl
 
