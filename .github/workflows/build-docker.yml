@@ -2,7 +2,7 @@ name : Scripts Test and Push
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: terrainworks-fortran
+  IMAGE_NAME: jessjaco/terrainworks-fortran
 
 on:
   pull_request:
