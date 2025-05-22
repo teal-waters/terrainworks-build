@@ -11,7 +11,7 @@ MOD_OUT = built_mods
 #    of e.g. MakeGrids unreadable (and 4x as large) because they have 128 bit data 
 #    rather than 32.
 FFLAGS = -O2 -fpp -nowarn -check bounds -traceback -I modules -I modules/OrderPack \
-				 -I $(MOD_OUT) -module built_mods -qmkl -assume byterecl
+				 -I $(MOD_OUT) -qmkl -assume byterecl
 
 # For now, everything that goes into MakeGrids. Unfortunately there are some modules
 # that can't compile, I think because they are out of sync with the rest of the code,
@@ -31,16 +31,13 @@ MODULE_OBJS = $(MODULES:.f90=.o)
 
 DEPS_FILE = deps.mk
 
-# lapack should not be hardcoded here
 MakeGrids: $(DEPS_FILE) $(MODULE_OBJS)
-	$(FC) $(FFLAGS) $(MOD_OUT).o
-		/opt/intel/oneapi/2025.1/lib/libmkl_lapack95_ilp64.a \
-		-o MakeGrids
+	$(FC) $(FFLAGS) $(MOD_OUT)/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o MakeGrids
 
 include $(DEPS_FILE)
 
+# -c is to indicate we're building a module.
 %.o: %.f90
-	# -c is to indicate we're building a module.
 	$(FC) -c $(FFLAGS) $< -o $(MOD_OUT)/$(notdir $@)
 
 # makedepf90 only calculates dependencies using things in SRC. So even though

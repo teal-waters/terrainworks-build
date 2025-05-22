@@ -8,3 +8,7 @@ RUN apt-get update && apt-get install -y \
   && apt-get autoclean \
   && apt-get autoremove \
   && rm -rf /var/lib/{apt,dpkg,cache,log}
+
+ADD . /code
+WORKDIR /code
+RUN make
