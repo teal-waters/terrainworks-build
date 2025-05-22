@@ -11,4 +11,4 @@ RUN apt-get update && apt-get install -y \
 
 ADD . /code
 WORKDIR /code
-RUN make
+RUN git submodule update --init --recursive && make
