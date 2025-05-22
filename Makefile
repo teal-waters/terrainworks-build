@@ -4,7 +4,6 @@
 # running ifx, but I think it can only be called once.
 FC = ifx
 MOD_OUT = built_mods
-mkdir -p $(MOD_OUT)
 # Most of these flags are the recommended ones. A couple notes though for ifx:
 # 1. `-qmkl` includes the lapack95 library shipped with ifx
 # 2. `-assume byterecl` is needed in the tiff (and perhaps flt) opening routines so 
@@ -33,12 +32,14 @@ MODULE_OBJS = $(MODULES:.f90=.o)
 DEPS_FILE = deps.mk
 
 MakeGrids: $(DEPS_FILE) $(MODULE_OBJS)
+	mkdir -p $(MOD_OUT)
 	$(FC) $(FFLAGS) $(MOD_OUT)/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o MakeGrids
 
 include $(DEPS_FILE)
 
 # -c is to indicate we're building a module.
 %.o: %.f90
+	mkdir -p $(MOD_OUT)
 	$(FC) -c $(FFLAGS) $< -o $(MOD_OUT)/$(notdir $@)
 
 # makedepf90 only calculates dependencies using things in SRC. So even though
