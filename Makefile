@@ -11,7 +11,7 @@ MOD_OUT = built_mods
 #    of e.g. MakeGrids unreadable (and 4x as large) because they have 128 bit data 
 #    rather than 32.
 FFLAGS = -O2 -fpp -nowarn -check bounds -traceback -I modules -I modules/OrderPack \
-				 -I $(MOD_OUT) -qmkl -assume byterecl
+				 -I $(MOD_OUT) -module $(MOD_OUT) -qmkl -assume byterecl
 
 # For now, everything that goes into MakeGrids. Unfortunately there are some modules
 # that can't compile, I think because they are out of sync with the rest of the code,
@@ -27,20 +27,21 @@ MODULES = modules/data_modules.f90 modules/error_handler.f90 modules/Utilities.f
 					modules/OrderPack/refsor.f90 modules/OrderPack/mrgrnk.f90 \
 					GridUtilities/MakeGrids.f90
 
-MODULE_OBJS = $(addprefix $(MOD_OUT)/, $(notdir $(MODULES:.f90=.o)))
+MODULE_OBJS = $(MODULES:.f90=.o)
 
 DEPS_FILE = deps.mk
 
-MakeGrids: $(DEPS_FILE) $(MODULE_OBJS)
-	mkdir -p $(MOD_OUT)
-	$(FC) $(FFLAGS) $(MOD_OUT)/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o MakeGrids
+MakeGrids: $(DEPS_FILE) $(MODULE_OBJS) | $(MOD_OUT)
+	$(FC) $(FFLAGS) GridUtilities/*.o modules/*.o modules/OrderPack/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o MakeGrids
 
 include $(DEPS_FILE)
 
 # -c is to indicate we're building a module.
-%.o: %.f90
+%.o: %.f90 | $(MOD_OUT)
+	$(FC) -c $(FFLAGS) $< -o $@
+
+$(MOD_OUT):
 	mkdir -p $(MOD_OUT)
-	$(FC) -c $(FFLAGS) $< -o $(MOD_OUT)/$(notdir $@)
 
 # makedepf90 only calculates dependencies using things in SRC. So even though
 # we only need e.g. MakeGrids.o and its dependencies, it won't find them

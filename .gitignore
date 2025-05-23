@@ -1,3 +1,4 @@
 built_mods
 *.mod
+*.o
 venv
