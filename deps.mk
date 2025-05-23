@@ -17,3 +17,4 @@ modules/maxheap.o : modules/maxheap.f90 modules/data_modules.o
 modules/OrderPack/refsor.o : modules/OrderPack/refsor.f90 
 modules/OrderPack/mrgrnk.o : modules/OrderPack/mrgrnk.f90 modules/data_modules.o 
 GridUtilities/MakeGrids.o : GridUtilities/MakeGrids.f90 modules/ChannelNetworks.o modules/ChannelNetworks.o modules/ChannelNode_Module.o modules/DEM_module.o modules/Grid_Module.o modules/Utilities.o modules/Utilities.o modules/error_handler.o modules/data_modules.o 
+GridUtilities/bldGrds2.o : GridUtilities/bldGrds2.f90 modules/ChannelNode_Module.o modules/DataTableModule.o modules/DEM_module.o modules/Grid_Module.o modules/Utilities.o modules/Utilities.o modules/error_handler.o modules/data_modules.o 

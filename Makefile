@@ -25,14 +25,19 @@ MODULES = modules/data_modules.f90 modules/error_handler.f90 modules/Utilities.f
 					modules/Piece_Module.f90 modules/random.f90 \
 					modules/maxheap.f90 \
 					modules/OrderPack/refsor.f90 modules/OrderPack/mrgrnk.f90 \
-					GridUtilities/MakeGrids.f90
+					GridUtilities/MakeGrids.f90 GridUtilities/bldGrds2.f90
 
 MODULE_OBJS = $(MODULES:.f90=.o)
 
 DEPS_FILE = deps.mk
 
+all: bldgrds MakeGrids
+
+bldgrds: $(DEPS_FILE) $(MODULE_OBJS) | $(MOD_OUT)
+	$(FC) $(FFLAGS) GridUtilities/bldGrds2.o modules/*.o modules/OrderPack/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o bldgrds
+
 MakeGrids: $(DEPS_FILE) $(MODULE_OBJS) | $(MOD_OUT)
-	$(FC) $(FFLAGS) GridUtilities/*.o modules/*.o modules/OrderPack/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o MakeGrids
+	$(FC) $(FFLAGS) GridUtilities/MakeGrids.o modules/*.o modules/OrderPack/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o MakeGrids
 
 include $(DEPS_FILE)
 
