@@ -27,7 +27,7 @@ MODULES = modules/data_modules.f90 modules/error_handler.f90 modules/Utilities.f
 					modules/OrderPack/refsor.f90 modules/OrderPack/mrgrnk.f90 \
 					GridUtilities/MakeGrids.f90
 
-MODULE_OBJS = $(MODULES:.f90=.o)
+MODULE_OBJS = $(addprefix $(MOD_OUT)/, $(notdir $(MODULES:.f90=.o)))
 
 DEPS_FILE = deps.mk
 
