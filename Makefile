@@ -13,9 +13,9 @@ MOD_OUT = built_mods
 FFLAGS = -O2 -fpp -nowarn -check bounds -traceback -I modules -I modules/OrderPack \
 				 -I $(MOD_OUT) -module $(MOD_OUT) -qmkl -assume byterecl
 
-# For now, everything that goes into MakeGrids. Unfortunately there are some modules
-# that can't compile, I think because they are out of sync with the rest of the code,
-# so we can't just add all modules.
+# These are all modules needed to compile MakeGrids and bldgrds. We could include
+# _everything_, but there are several modules which I couldn't get to compile and
+# appeared to be dependent on older code versions.
 MODULES = modules/data_modules.f90 modules/error_handler.f90 modules/Utilities.f90 \
 					modules/TIFF_module.f90 modules/TIFF_LZW_Module.f90 \
 					modules/DataTableModule.f90 modules/Grid_Module.f90 \
