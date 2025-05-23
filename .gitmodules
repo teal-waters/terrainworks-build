@@ -3,4 +3,4 @@
 	url = git@github.com:jessjaco/modules.git
 [submodule "GridUtilities"]
 	path = GridUtilities
-	url = git@github.com:DanMillerM2/GridUtilities.git
+	url = git@github.com:jessjaco/GridUtilities.git
