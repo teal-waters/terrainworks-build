@@ -1,0 +1,143 @@
+all: echo_path HAND
+
+FC := ifx
+ifeq ($(shell which $(FC)),)
+$(error "$(FC) not found in PATH.\nPlease source the Intel oneAPI environment (setvars.sh or setvars.bat) before running make.")
+endif
+
+MAKE_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+UNAME_S := $(shell uname -s)
+
+ifeq ($(OS),Windows_NT) # Windows NT -------------------------------------------
+
+MODULES_PATH := $(MAKE_DIR)\modules
+CHANNELUTIL_PATH := $(MAKE_DIR)\ChannelUtilities
+MOD_OUT := $(MAKE_DIR)\built_mods
+
+echo_path:
+	@echo ===== Building on Windows =====
+	@echo MAKE_DIR: $(MAKE_DIR)
+	@echo MODULES_PATH: $(MODULES_PATH)
+	@echo CHANNELUTIL_PATH: $(CHANNELUTIL_PATH)
+
+FFLAGS := /O2 /fpp /nologo /check:bounds /traceback /module:$(MOD_OUT) \
+	/I$(MOD_OUT) /Qmkl /assume:byterecl
+
+MODULES := \
+	$(MODULES_PATH)\data_modules.f90 \
+	$(MODULES_PATH)\error_handler.f90 \
+	$(MODULES_PATH)\OrderPack\mrgrnk.f90 \
+	$(MODULES_PATH)\Utilities.f90 \
+	$(MODULES_PATH)\OrderPack\refsor.f90 \
+	$(MODULES_PATH)\TIFF_LZW_Module.f90 \
+	$(MODULES_PATH)\Grid_Module.f90 \
+	$(MODULES_PATH)\TIFF_module.f90 \
+	$(MODULES_PATH)\DataTableModule.f90 \
+	$(MODULES_PATH)\filters.f90 \
+	$(MODULES_PATH)\edgeHeap.f90 \
+	$(MODULES_PATH)\DEM_module.f90 \
+	$(MODULES_PATH)\random.f90 \
+	$(MODULES_PATH)\Piece_Module.f90 \
+	$(MODULES_PATH)\maxheap.f90 \
+	$(MODULES_PATH)\ChannelNode_Module.f90 \
+	$(MODULES_PATH)\ValleyFloor_Module.f90 \
+	$(MODULES_PATH)\ChannelNetworks.f90 \
+	$(CHANNELUTIL_PATH)\ValleyFloor\HAND.f90
+
+MODULE_OBJS = $(foreach src,$(MODULES),$(MOD_OUT)\$(notdir $(basename $(src))).obj)
+
+DEPS_FILE = $(MOD_OUT)\deps.mk
+
+HAND: $(MODULE_OBJS) | $(MOD_OUT)
+	@echo $(FC) $(FFLAGS) $(MODULE_OBJS) $(MKLROOT)\lib\libmkl_lapack95_ilp64.lib /exe:$@
+	$(FC) $(FFLAGS) $(MODULE_OBJS) $(MKLROOT)\lib\libmkl_lapack95_ilp64.lib /exe:$@
+
+$(MOD_OUT)\%.obj: $(MODULES_PATH)\%.f90 | $(MOD_OUT)
+	$(FC) /c $(FFLAGS) $< /Fo$@
+
+$(MOD_OUT)\%.obj: $(MODULES_PATH)\OrderPack\%.f90 | $(MOD_OUT)
+	$(FC) /c $(FFLAGS) $< /Fo$@
+
+$(MOD_OUT)\%.obj: $(CHANNELUTIL_PATH)\ValleyFloor\%.f90 | $(MOD_OUT)
+	$(FC) /c $(FFLAGS) $< /Fo$@
+
+$(MOD_OUT):
+	if not exist $(MOD_OUT) mkdir $(MOD_OUT)
+
+$(DEPS_FILE): $(MODULES) | $(MOD_OUT)
+	@echo Generating dependencies...
+	rem You may need a Windows-compatible dependency generator here
+
+else # Unix (Linux, macOS, etc.) -----------------------------------------------
+
+MODULES_PATH := $(MAKE_DIR)../modules
+CHANNELUTIL_PATH := $(MAKE_DIR)../ChannelUtilities
+MOD_OUT := $(MAKE_DIR)built_mods
+
+echo_path:
+	@echo "===== Building on Linux ====="
+	@echo "MAKE_DIR: $(MAKE_DIR)"
+	@echo "CHANNELUTIL_PATH: $(CHANNELUTIL_PATH)"
+	@echo "MODULES_PATH: $(MODULES_PATH)"
+
+FFLAGS := -O2 -fpp -nowarn -check bounds -traceback -module $(MOD_OUT) \
+	-I $(MOD_OUT) -qmkl -assume byterecl
+
+# List all source files needed for hand
+MODULES := \
+	$(MODULES_PATH)/data_modules.f90 \
+	$(MODULES_PATH)/error_handler.f90 \
+	$(MODULES_PATH)/OrderPack/mrgrnk.f90 \
+	$(MODULES_PATH)/Utilities.f90 \
+	$(MODULES_PATH)/OrderPack/refsor.f90 \
+	$(MODULES_PATH)/TIFF_LZW_Module.f90 \
+	$(MODULES_PATH)/Grid_Module.f90 \
+	$(MODULES_PATH)/TIFF_module.f90 \
+	$(MODULES_PATH)/DataTableModule.f90 \
+	$(MODULES_PATH)/filters.f90 \
+	$(MODULES_PATH)/edgeHeap.f90 \
+	$(MODULES_PATH)/DEM_module.f90 \
+	$(MODULES_PATH)/random.f90 \
+	$(MODULES_PATH)/Piece_Module.f90 \
+	$(MODULES_PATH)/maxheap.f90 \
+	$(MODULES_PATH)/ChannelNode_Module.f90 \
+	$(MODULES_PATH)/ValleyFloor_Module.f90 \
+	$(MODULES_PATH)/ChannelNetworks.f90 \
+	$(CHANNELUTIL_PATH)/ValleyFloor/HAND.f90
+
+MODULE_OBJS = $(foreach src,$(MODULES),$(MOD_OUT)/$(notdir $(basename $(src))).o)
+
+DEPS_FILE = $(MOD_OUT)/deps.mk
+
+HAND: $(MODULE_OBJS) | $(MOD_OUT)
+	@echo "$(FC) $(FFLAGS) $(MODULE_OBJS) $(MKLROOT)/lib/libmkl_lapack95_ilp64.a -o $@"
+	$(FC) $(FFLAGS) $(MODULE_OBJS) $(MKLROOT)/lib/libmkl_lapack95_ilp64.a -o $@
+
+$(MOD_OUT)/%.o: $(MODULES_PATH)/%.f90 | $(MOD_OUT)
+	$(FC) -c $(FFLAGS) $< -o $@
+
+$(MOD_OUT)/%.o: $(MODULES_PATH)/OrderPack/%.f90 | $(MOD_OUT)
+	$(FC) -c $(FFLAGS) $< -o $@
+
+$(MOD_OUT)/%.o: $(CHANNELUTIL_PATH)/ValleyFloor/%.f90 | $(MOD_OUT)
+	$(FC) -c $(FFLAGS) $< -o $@
+
+$(MOD_OUT):
+	mkdir -p $(MOD_OUT)
+
+$(DEPS_FILE): $(MODULES) | $(MOD_OUT)
+	@echo "Generating dependencies..."
+	makedepf90 -I $(CHANNELUTIL_PATH)/ValleyFloor -I $(MODULES_PATH) -I $(MODULES_PATH)/OrderPack $(MODULES) > $(DEPS_FILE)
+
+clean:
+	@rm -vrf built_mods/
+	@rm -vf deps.mk
+	@rm -vf HAND
+
+endif
+
+.PHONY: clean all
+
+-include $(DEPS_FILE)
+
+$(MODULE_OBJS): | $(DEPS_FILE)
