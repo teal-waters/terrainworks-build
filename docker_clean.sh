@@ -1,7 +1,7 @@
 #!/bin/bash
 
-APP_VERSION="1.0"
-APP_NAME="my-application-1"
+APP_VERSION="0.1"
+APP_NAME="bldgrds"
 
 CONTAINER_ID=$(docker ps -a --filter "ancestor=${APP_NAME}:${APP_VERSION}" --format "{{.ID}}")
 
