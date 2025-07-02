@@ -1,10 +1,12 @@
 #!/bin/bash
 
+# TODO: make these variables command arguments
 APP_VERSION="0.1"
 APP_NAME="bldgrds"
 
 CONTAINER_ID=$(docker ps -a --filter "ancestor=${APP_NAME}:${APP_VERSION}" --format "{{.ID}}")
 
+# Remove the container
 if [ -n "$CONTAINER_ID" ]; then
     echo "Stopping container $CONTAINER_ID..."
     docker stop "$CONTAINER_ID"
@@ -19,3 +21,5 @@ if [ -n "$IMAGE_ID" ]; then
     echo "Removing image $IMAGE_ID..."
     docker rmi "$IMAGE_ID"
 fi
+
+echo "Cleanup complete."
