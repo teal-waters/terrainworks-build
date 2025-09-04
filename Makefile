@@ -10,8 +10,10 @@ MOD_OUT = built_mods
 #    the data are loaded as bytes, not longwords (4 byte units). This makes the outputs
 #    of e.g. MakeGrids unreadable (and 4x as large) because they have 128 bit data 
 #    rather than 32.
+# 3. `-static-intel` links intel libraries statically so you don't need
+# 	 e.g. libmkl_intel_lp64.so.2 installed locally
 FFLAGS = -O2 -fpp -nowarn -check bounds -traceback -I modules -I modules/OrderPack \
-				 -I $(MOD_OUT) -module $(MOD_OUT) -qmkl -assume byterecl
+				 -I $(MOD_OUT) -module $(MOD_OUT) -qmkl -assume byterecl -static-intel
 
 # These are all modules needed to compile MakeGrids and bldgrds. We could include
 # _everything_, but there are several modules which I couldn't get to compile and
