@@ -12,8 +12,11 @@ MOD_OUT = built_mods
 #    rather than 32.
 # 3. `-static-intel` links intel libraries statically so you don't need
 # 	 e.g. libmkl_intel_lp64.so.2 installed locally
+# 4. `-qmkl=sequential` bypasses use of libiomp5.so which we cannot link to statically.
+#    Since these tools are not using multithreading I think this is fine, but 
+#    we may need to revisit if future tools do use multithreading.
 FFLAGS = -O2 -fpp -nowarn -check bounds -traceback -I modules -I modules/OrderPack \
-				 -I $(MOD_OUT) -module $(MOD_OUT) -qmkl -assume byterecl -static-intel
+				 -I $(MOD_OUT) -module $(MOD_OUT) -qmkl=sequential -assume byterecl -static-intel \
 
 # These are all modules needed to compile MakeGrids and bldgrds. We could include
 # _everything_, but there are several modules which I couldn't get to compile and
