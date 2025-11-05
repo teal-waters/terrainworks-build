@@ -1,4 +1,4 @@
-name : Scripts Test and Push
+name : Build and push to ghcr.io
 
 env:
   REGISTRY: ghcr.io
