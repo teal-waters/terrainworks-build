@@ -5,7 +5,6 @@ env:
   IMAGE_NAME: teal-waters/terrainworks-build
 
 on:
-  pull_request:
   push:
     branches:
       - main
