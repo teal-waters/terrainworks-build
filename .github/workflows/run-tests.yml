@@ -1,58 +1,22 @@
 name: Test Fortran Tools
 
 on:
-  pull_request:
   push:
-    branches:
-      - main
-    tags:
-      - 'v*'
+    branches: [main]
+    tags: ['v*']
+  pull_request:
   workflow_dispatch:
 
-env:
-  IMAGE_NAME: teal-waters/terrainworks-build
-  TAG: test
-
 jobs:
-  build-test-image:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          submodules: recursive
-          token: ${{ secrets.GH_PAT }}
+      - uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Build image (no push)
-        id: build
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          load: true
-          push: false
-          tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-  test:
-    needs: build-test-image
-    runs-on: ubuntu-latest
-    container:
-      image: teal-waters/terrainworks-build:test
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t teal-waters/terrainworks-build:test .
 
       - name: Run tests
         run: |
-          cd tests
-          chmod +x run_tests.sh
-          ./run_tests.sh
+          docker run --rm teal-waters/terrainworks-build:test \
+            /bin/bash -c "cd tests && chmod +x run_tests.sh && ./run_tests.sh"
