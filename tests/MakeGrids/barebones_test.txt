@@ -1,0 +1,3 @@
+DEM FILE:data/test_dem.tif
+SCRATCH DIRECTORY:.
+LENGTH SCALE: 10
