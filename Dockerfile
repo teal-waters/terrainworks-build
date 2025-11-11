@@ -12,3 +12,6 @@ RUN apt-get update && apt-get install -y \
 ADD . /code
 WORKDIR /code
 RUN make
+
+# Add /code to PATH so binaries are there too
+ENV PATH="/code:${PATH}"
