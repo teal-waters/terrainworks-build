@@ -8,11 +8,18 @@ COMMANDS=(
   "MakeGrids/barebones_test.sh"
 )
 
+fail=0
+
 for cmd in "${COMMANDS[@]}"; do
   echo -n "$cmd ... "
-  if eval "source $cmd" > /dev/null 2>&1; then
-    echo "✅ OK"
-  else
+  output=$(bash "$cmd" 2>&1) || {
     echo "❌ FAIL"
-  fi
+    echo "$output"
+    fail=1
+    continue
+  }
+
+  echo "✅ OK"
 done
+
+exit $fail
