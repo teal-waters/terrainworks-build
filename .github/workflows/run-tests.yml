@@ -16,8 +16,6 @@ env:
 jobs:
   build-test-image:
     runs-on: ubuntu-latest
-    outputs:
-      image: ${{ steps.build.outputs.imageid }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,7 +45,7 @@ jobs:
     needs: build-test-image
     runs-on: ubuntu-latest
     container:
-      image: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+      image: teal-waters/terrainworks-build:test
 
     steps:
       - name: Checkout repo
