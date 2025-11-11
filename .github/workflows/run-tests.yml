@@ -1,0 +1,26 @@
+name: Test Fortran Tools
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Build image
+        run: docker build -t teal-waters/terrainworks-build:test .
+
+      - name: Run tests
+        run: |
+          docker run --rm teal-waters/terrainworks-build:test \
+            /bin/bash -c "cd tests && chmod +x run_tests.sh && ./run_tests.sh"

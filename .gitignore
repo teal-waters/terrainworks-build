@@ -1,4 +1,7 @@
 built_mods
 *.mod
 *.o
+*.log
 venv
+MakeGrids
+bldgrds
