@@ -3,4 +3,4 @@
 	url = git@github.com:teal-waters/modules.git
 [submodule "GridUtilities"]
 	path = GridUtilities
-	url = git@github.com/teal-waters/GridUtilities.git
+	url = git@github.com:teal-waters/GridUtilities.git
