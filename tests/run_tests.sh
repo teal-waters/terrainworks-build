@@ -6,6 +6,8 @@
 
 COMMANDS=(
   "MakeGrids/barebones_test.sh"
+  "bldgrds/barebones_test.sh"
+  "bldgrds/test_hand.sh"
 )
 
 fail=0
@@ -21,5 +23,12 @@ for cmd in "${COMMANDS[@]}"; do
 
   echo "✅ OK"
 done
+
+# clean up
+echo "Cleaning up after tests ..."
+rm *.flt
+rm *.hdr
+rm *.dat
+rm *.log
 
 exit $fail

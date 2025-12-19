@@ -1,10 +1,27 @@
-# I don't know if ifx/ifort was previously used but it seems to function better with
-# the existing codebase than gfortran. 
-# Note that /opt/intel/oneapi/setvars.sh (locally) needs to be called before
+# This file can be used to build bldgrds and MakeGrids executables under linux.
+# It currently does not support windows builds.
+# It uses the Intel fortran compiler ifx and is not currently compatible with
+# gfortran or other compilers.
+# To use it you will need:
+# - ifx
+# - makedepf90
+# - GNU Make
+#
+# Note that /opt/intel/oneapi/setvars.sh needs to be called before
 # running ifx, but I think it can only be called once.
+#
+# To compile the programs run
+# $ make
+# or
+# # make build=release
+# 
+# If you wish to compile with debugging flags, use
+# $ make build=debug
 FC = ifx
+BUILD ?= release
 MOD_OUT = built_mods
-# Most of these flags are the recommended ones. A couple notes though for ifx:
+
+# Most of these flags are the ifx recommended ones. A couple notes though for ifx:
 # 1. `-qmkl` includes the lapack95 library shipped with ifx
 # 2. `-assume byterecl` is needed in the tiff (and perhaps flt) opening routines so 
 #    the data are loaded as bytes, not longwords (4 byte units). This makes the outputs
@@ -15,8 +32,18 @@ MOD_OUT = built_mods
 # 4. `-qmkl=sequential` bypasses use of libiomp5.so which we cannot link to statically.
 #    Since these tools are not using multithreading I think this is fine, but 
 #    we may need to revisit if future tools do use multithreading.
-FFLAGS = -O2 -fpp -nowarn -check bounds -traceback -I modules -I modules/OrderPack \
-				 -I $(MOD_OUT) -module $(MOD_OUT) -qmkl=sequential -assume byterecl -static-intel \
+
+FFLAGS_COMMON := -fpp -traceback -I modules -I modules/OrderPack -I $(MOD_OUT) \
+  -module $(MOD_OUT) -assume byterecl
+
+FFLAGS_DEBUG := -O0 -g -check all -warn all
+FFLAGS_RELEASE := -O2 -nowarn -qmkl=sequential -static-intel
+
+ifeq ($(BUILD),debug)
+  FFLAGS := $(FFLAGS_COMMON) $(FFLAGS_DEBUG)
+else
+  FFLAGS := $(FFLAGS_COMMON) $(FFLAGS_RELEASE)
+endif
 
 # These are all modules needed to compile MakeGrids and bldgrds. We could include
 # _everything_, but there are several modules which I couldn't get to compile and
