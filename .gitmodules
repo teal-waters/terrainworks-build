@@ -1,6 +1,7 @@
 [submodule "modules"]
-	path = modules
-	url = git@github.com:jessjaco/modules.git
+    path = modules
+    url = https://github.com/teal-waters/modules.git
+
 [submodule "GridUtilities"]
-	path = GridUtilities
-	url = git@github.com:jessjaco/GridUtilities.git
+    path = GridUtilities
+    url = https://github.com/teal-waters/GridUtilities.git

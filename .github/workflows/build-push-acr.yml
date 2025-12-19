@@ -25,6 +25,7 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -76,6 +77,8 @@ jobs:
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
+        env:
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
@@ -84,7 +87,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
-
+      
       - name: Output image details
         run: |
           echo "### Docker Image Published" >> $GITHUB_STEP_SUMMARY
