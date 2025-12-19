@@ -11,17 +11,17 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          # fetch-depth: 0
+          # submodules: recursive
+          token: ${{ secrets.GH_PAT }}
+          persist-credentials: true
+
       - name: Debug auth
         run: |
           git config --get http.https://github.com/.extraheader || echo "NO HEADER"
           git ls-remote https://github.com/teal-waters/GridUtilities.git || true
-
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          submodules: recursive
-          token: ${{ secrets.GH_PAT }}
-          persist-credentials: true
 
       - name: Build image
         run: docker build -t teal-waters/terrainworks-build:test .
