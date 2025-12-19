@@ -25,10 +25,6 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug auth
-        run: |
-          git config --get http.https://github.com/.extraheader || echo "NO HEADER"
-          git ls-remote https://github.com/teal-waters/GridUtilities.git || true
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -37,6 +33,11 @@ jobs:
           submodules: recursive
           token: ${{ secrets.GH_PAT }}
           persist-credentials: true
+
+      - name: Debug auth
+        run: |
+          git config --get http.https://github.com/.extraheader || echo "NO HEADER"
+          git ls-remote https://github.com/teal-waters/GridUtilities.git || true
 
       - name: Get GitHub App Token
         id: app-token
