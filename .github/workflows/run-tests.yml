@@ -11,6 +11,11 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
+      - name: Debug auth
+        run: |
+          git config --get http.https://github.com/.extraheader || echo "NO HEADER"
+          git ls-remote https://github.com/teal-waters/GridUtilities.git || true
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
