@@ -57,13 +57,17 @@ MODULES = modules/data_modules.f90 modules/error_handler.f90 modules/Utilities.f
 					modules/Piece_Module.f90 modules/random.f90 \
 					modules/maxheap.f90 \
 					modules/OrderPack/refsor.f90 modules/OrderPack/mrgrnk.f90 \
-					GridUtilities/MakeGrids.f90 GridUtilities/bldGrds2.f90
+					GridUtilities/MakeGrids.f90 GridUtilities/bldGrds2.f90 \
+					src/parse_test.f90
 
 MODULE_OBJS = $(MODULES:.f90=.o)
 
 DEPS_FILE = deps.mk
 
-all: bldgrds MakeGrids
+all: bldgrds MakeGrids parse_test
+
+parse_test: $(DEPS_FILE) $(MODULE_OBJS) | $(MOD_OUT)
+	$(FC) $(FFLAGS) src/parse_test.o modules/*.o modules/OrderPack/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o $@
 
 bldgrds: $(DEPS_FILE) $(MODULE_OBJS) | $(MOD_OUT)
 	$(FC) $(FFLAGS) GridUtilities/bldGrds2.o modules/*.o modules/OrderPack/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o bldgrds
@@ -84,7 +88,7 @@ $(MOD_OUT):
 # we only need e.g. MakeGrids.o and its dependencies, it won't find them
 # unless we include all of them. Ideally we could just include modules/*.f90
 # but there were some modules that didn't build, and I think they may be deprecated.
-# A future solution may be to just include modules in the active branch that are
+# A future solution may be to just keep modules in the active branch that are
 # actually up to date.
 $(DEPS_FILE): $(MODULES)
 	makedepf90 -I GridUtilites -I modules -I modules/OrderPack $(MODULES) > $(DEPS_FILE)
