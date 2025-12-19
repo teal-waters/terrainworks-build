@@ -29,23 +29,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-#          fetch-depth: 0
-#          submodules: recursive
+          fetch-depth: 0
+          submodules: recursive
           token: ${{ secrets.GH_PAT }}
-          persist-credentials: true
-
-      - name: Debug auth
-        run: |
-          git config --get http.https://github.com/.extraheader || echo "NO HEADER"
-          git ls-remote https://github.com/teal-waters/GridUtilities.git || true
-
-      - name: Get GitHub App Token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          owner: teal-waters
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
