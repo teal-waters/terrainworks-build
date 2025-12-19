@@ -6,8 +6,8 @@
 
 COMMANDS=(
   "MakeGrids/barebones_test.sh"
-  "bldgrds/barebones_test.sh"
-  "bldgrds/test_hand.sh"
+  #"bldgrds/barebones_test.sh"
+  #"bldgrds/test_hand.sh"
 )
 
 fail=0

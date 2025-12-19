@@ -1,7 +1,7 @@
  # Input file for BldGrds
-  DEM FILE: test_dem.tif
+  DEM FILE: data/test_dem.tif
   SCRATCH: ./
-  CHANNEL MASK: FILE=test_channel_mask, RADIUS=10.0, DIRECTIONAL, INIT ALL
+  CHANNEL MASK: FILE=data/test_channel_mask, RADIUS=10.0, DIRECTIONAL, INIT ALL
   NO CHANNELS: # this precludes initiation of channels other than those specified in the channel mask
   # GRADIENT LENGTH SCALE: 20. # Optional, only if a length scale different than 2 DEM-cell widths is wanted
 # OUTPUT NODE POINT SHAPEFILE: node_bldgrds, SPLITS = 1  # Optional, to check that channels are properly enforced
