@@ -88,7 +88,7 @@ $(MOD_OUT):
 # A future solution may be to just include modules in the active branch that are
 # actually up to date.
 $(DEPS_FILE): $(MODULES)
-	makedepf90 -I GridUtilites -I modules -I modules/OrderPack $(MODULES) > $(DEPS_FILE)
+	makedepf90 -I GridUtilities -I modules -I modules/OrderPack $(MODULES) > $(DEPS_FILE)
 
 clean:
 	rm -f modules/*.o GridUtilities/*.o modules/OrderPack/*.o built_mods/*
