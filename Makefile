@@ -1,4 +1,5 @@
-# This file can be used to build bldgrds and build_derivs executables under linux.
+# This file can be used to build bldgrds, flow_dist and build_derivs executables
+# under linux.
 # It currently does not support windows builds.
 # It uses the Intel fortran compiler ifx and is not currently compatible with
 # gfortran or other compilers.
@@ -58,19 +59,23 @@ MODULES = modules/data_modules.f90 modules/error_handler.f90 modules/Utilities.f
 					modules/utils.f90 modules/kernel_module.f90 modules/derivs_module.f90 \
 					modules/surface_fit.f90 \
 					modules/OrderPack/refsor.f90 modules/OrderPack/mrgrnk.f90 \
-					GridUtilities/build_derivs.f90 GridUtilities/bldGrds2.f90
+					GridUtilities/build_derivs.f90 GridUtilities/bldGrds2.f90 \
+					GridUtilities/flow_dist.f90
 
 MODULE_OBJS = $(MODULES:.f90=.o)
 
 DEPS_FILE = deps.mk
 
-all: bldgrds build_derivs
+all: bldgrds build_derivs flow_dist
 
 bldgrds: $(DEPS_FILE) $(MODULE_OBJS) | $(MOD_OUT)
 	$(FC) $(FFLAGS) GridUtilities/bldGrds2.o modules/*.o modules/OrderPack/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o bldgrds
 
 build_derivs: $(DEPS_FILE) $(MODULE_OBJS) | $(MOD_OUT)
 	$(FC) $(FFLAGS) GridUtilities/build_derivs.o modules/*.o modules/OrderPack/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o build_derivs
+
+flow_dist: $(DEPS_FILE) $(MODULE_OBJS) | $(MOD_OUT)
+	$(FC) $(FFLAGS) GridUtilities/flow_dist.o modules/*.o modules/OrderPack/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o flow_dist
 
 include $(DEPS_FILE)
 
