@@ -1,4 +1,4 @@
-# This file can be used to build bldgrds and build_derivs executables under linux.
+# This file can be used to build bldgrds, MakeGrids and build_derivs executables under linux.
 # It currently does not support windows builds.
 # It uses the Intel fortran compiler ifx and is not currently compatible with
 # gfortran or other compilers.
@@ -48,26 +48,31 @@ endif
 # These are all modules needed to compile build_derivs and bldgrds. We could include
 # _everything_, but there are several modules which I couldn't get to compile and
 # appeared to be dependent on older code versions.
-MODULES = modules/data_modules.f90 modules/error_handler.f90 modules/Utilities.f90 \
-					modules/TIFF_module.f90 modules/TIFF_LZW_Module.f90 \
-					modules/DataTableModule.f90 modules/Grid_Module.f90 \
-					modules/ValleyFloor_Module.f90 modules/filters.f90 \
-					modules/DEM_module.f90 modules/ChannelNode_Module.f90 \
-					modules/ChannelNetworks.f90 modules/edgeHeap.f90 \
-					modules/Piece_Module.f90 modules/random.f90 modules/maxheap.f90 \
-					modules/utils.f90 modules/kernel_module.f90 modules/derivs_module.f90 \
-					modules/surface_fit.f90 \
+MODULES = modules/data_modules.f90 modules/error_handler.f90 \
+          modules/Utilities.f90 modules/TIFF_module.f90 \
+					modules/TIFF_LZW_Module.f90 modules/DataTableModule.f90 \
+					modules/Grid_Module.f90 modules/ValleyFloor_Module.f90 \
+					modules/filters.f90 modules/DEM_module.f90 \
+					modules/ChannelNode_Module.f90 modules/ChannelNetworks.f90 \
+					modules/edgeHeap.f90 modules/Piece_Module.f90 modules/random.f90 \
+					modules/maxheap.f90 modules/utils.f90 modules/kernel_module.f90 \
+					modules/derivs_module.f90 modules/surface_fit.f90 \
 					modules/OrderPack/refsor.f90 modules/OrderPack/mrgrnk.f90 \
-					GridUtilities/build_derivs.f90 GridUtilities/bldGrds2.f90
+					GridUtilities/build_derivs.f90 \
+					GridUtilities/MakeGrids.f90 \
+					GridUtilities/bldGrds2.f90
 
 MODULE_OBJS = $(MODULES:.f90=.o)
 
 DEPS_FILE = deps.mk
 
-all: bldgrds build_derivs
+all: bldgrds MakeGrids build_derivs
 
 bldgrds: $(DEPS_FILE) $(MODULE_OBJS) | $(MOD_OUT)
 	$(FC) $(FFLAGS) GridUtilities/bldGrds2.o modules/*.o modules/OrderPack/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o bldgrds
+
+MakeGrids: $(DEPS_FILE) $(MODULE_OBJS) | $(MOD_OUT)
+	$(FC) $(FFLAGS) GridUtilities/MakeGrids.o modules/*.o modules/OrderPack/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o MakeGrids
 
 build_derivs: $(DEPS_FILE) $(MODULE_OBJS) | $(MOD_OUT)
 	$(FC) $(FFLAGS) GridUtilities/build_derivs.o modules/*.o modules/OrderPack/*.o $(MKLROOT)/lib/libmkl_lapack95_ilp64.a  -o build_derivs
