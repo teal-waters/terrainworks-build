@@ -46,9 +46,9 @@ else
   FFLAGS := $(FFLAGS_COMMON) $(FFLAGS_RELEASE)
 endif
 
-# These are all modules needed to compile build_derivs and bldgrds. We could include
-# _everything_, but there are several modules which I couldn't get to compile and
-# appeared to be dependent on older code versions.
+# These are all modules needed to compile build_derivs and bldgrds. We could
+# include _everything_, but there are several modules which I couldn't get to
+# compile and appeared to be dependent on older code versions.
 MODULES = modules/data_modules.f90 modules/error_handler.f90 \
           modules/Utilities.f90 modules/TIFF_module.f90 \
 					modules/TIFF_LZW_Module.f90 modules/DataTableModule.f90 \
