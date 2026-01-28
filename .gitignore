@@ -2,6 +2,7 @@ built_mods
 *.mod
 *.o
 *.log
+*.aux.xml
 venv
-MakeGrids
-bldgrds
+./MakeGrids
+./bldgrds
