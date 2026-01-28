@@ -1,0 +1,21 @@
+# Taken from: https://github.com/teal-waters/elevation_derivatives
+# Paths
+DEM: data/test_dem.tif
+OUTPUT PATH: output.flt
+OUTPUT SURFACE: surface.flt
+OUTPUT RMSE: rmse.flt
+SCRATCH DIRECTORY: ./
+
+# Processing parameters
+WINDOW: TYPE = circle, SIZE = 50.
+KERNEL: TYPE = circle, NUM PNTS = 16, NUM RADII = 2
+POLY FIT: QUADRATIC  # or CUBIC for 3rd order
+
+# List of derivatives to compute
+DERIVATIVES LIST:
+  SLOPE:
+  PROFILE CURVATURE:
+  PLAN CURVATURE:
+  MEAN CURVATURE:
+  GAUSS CURVATURE:
+END LIST:
