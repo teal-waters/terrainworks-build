@@ -36,4 +36,4 @@ Assuming submodules are on the correct branch, they can be updating using
 
 Some simple tests have been written in tests/. To run them, change into the that directory and run
 
-`source run_tests.sh`.
+`./run_tests.sh`.
