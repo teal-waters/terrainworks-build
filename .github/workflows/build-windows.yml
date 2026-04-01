@@ -1,0 +1,49 @@
+name: Build Windows Binaries
+
+on:
+  push:
+    tags: ['v*']
+  release:
+    types: [created]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Install GNU Make
+        run: choco install make --no-progress -y
+
+      - name: Setup Intel Fortran (ifx) and MKL
+        uses: fortran-lang/setup-fortran@v1
+        with:
+          compiler: intel
+          version: '2025.1'
+
+      - name: Build
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
+          make -f Makefile.win
+
+      - name: Get version
+        id: get_version
+        shell: bash
+        run: |
+          git fetch --all --tags
+          echo "VERSION=$(git describe --tags --always)" >> $GITHUB_OUTPUT
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-binaries-${{ steps.get_version.outputs.VERSION }}
+          path: |
+            bldgrds.exe
+            MakeGrids.exe
+            build_derivs.exe
