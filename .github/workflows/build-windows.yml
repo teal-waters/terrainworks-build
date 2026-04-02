@@ -34,7 +34,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install Intel MKL
-        run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl-devel==2025.2 --yes
+        run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl-static==2025.2 --yes
 
       - name: Set MKLROOT
         shell: bash
