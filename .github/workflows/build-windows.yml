@@ -30,8 +30,7 @@ jobs:
       - name: Build
         shell: cmd
         run: |
-          call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
-          make
+          make -f Makefile.win
 
       - name: Get version
         id: get_version
