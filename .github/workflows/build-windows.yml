@@ -43,8 +43,7 @@ jobs:
 
       - name: debug
         run: | 
-          dir C:\Miniconda\envs\test
-          dir C:\Miniconda\envs\test\Library
+          dir C:\Miniconda\envs\test\Library\lib
 
       - name: Build
         shell: cmd
