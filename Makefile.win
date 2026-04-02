@@ -55,7 +55,7 @@ MODULES = modules/data_modules.f90 modules/error_handler.f90 \
 
 MODULE_OBJS = $(MODULES:.f90=.obj)
 
-# Shared .o files for linking (all modules, excluding the GridUtilities programs).
+# Shared .obj files for linking (all modules, excluding the GridUtilities programs).
 # Listed explicitly because cmd.exe does not expand globs in command arguments.
 SHARED_OBJS = $(filter-out GridUtilities/%, $(MODULE_OBJS))
 
@@ -65,13 +65,13 @@ SHARED_OBJS = $(filter-out GridUtilities/%, $(MODULE_OBJS))
 all: bldgrds.exe MakeGrids.exe build_derivs.exe
 
 bldgrds.exe: $(MODULE_OBJS) | $(MOD_OUT)
-	$(FC) $(FFLAGS) GridUtilities/bldGrds2.o $(SHARED_OBJS) -o bldgrds.exe
+	$(FC) $(FFLAGS) GridUtilities/bldGrds2.obj $(MKLROOT)/lib/libmkl_lapack95_ilp64.a $(SHARED_OBJS) -o bldgrds.exe
 
 MakeGrids.exe: $(MODULE_OBJS) | $(MOD_OUT)
-	$(FC) $(FFLAGS) GridUtilities/MakeGrids.o $(SHARED_OBJS) -o MakeGrids.exe
+	$(FC) $(FFLAGS) GridUtilities/MakeGrids.obj $(MKLROOT)/lib/libmkl_lapack95_ilp64.a $(SHARED_OBJS) -o MakeGrids.exe
 
 build_derivs.exe: $(MODULE_OBJS) | $(MOD_OUT)
-	$(FC) $(FFLAGS) GridUtilities/build_derivs.o $(SHARED_OBJS) -o build_derivs.exe
+	$(FC) $(FFLAGS) GridUtilities/build_derivs.obj $(MKLROOT)/lib/libmkl_lapack95_ilp64.a $(SHARED_OBJS) -o build_derivs.exe
 
 include deps.win.mk
 

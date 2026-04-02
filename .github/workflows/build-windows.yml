@@ -39,6 +39,7 @@ jobs:
       - name: Setup env
         shell: cmd
         run: |
+          echo MKLROOT=C:\Miniconda\envs\test\Library>> %GITHUB_ENV%
           echo INCLUDE=C:\Miniconda\envs\test\Library\include;%INCLUDE%>> %GITHUB_ENV%
           echo LIB=C:\Miniconda\envs\test\Library\lib;%LIB%>> %GITHUB_ENV%
 
