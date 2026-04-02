@@ -39,8 +39,8 @@ jobs:
       - name: Build
         shell: cmd
         run: |
-          set "INCLUDE=%CONDA_PREFIX%\Library\include;%INCLUDE%"
-          set "LIB=%CONDA_PREFIX%\Library\lib;%LIB%"
+          set "INCLUDE=C:\Miniconda\envs\test\Library\include;%INCLUDE%"
+          set "INCLUDE=C:\Miniconda\envs\test\Library\lib;%LIB%"
           make -f Makefile.win
 
       - name: Get version
