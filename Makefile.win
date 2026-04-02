@@ -28,7 +28,7 @@ MOD_OUT = built_mods
 #    Since these tools are not using multithreading I think this is fine, but
 #    we may need to revisit if future tools do use multithreading.
 
-FFLAGS_COMMON := /fpp /traceback /I modules /I modules\OrderPack /I $(MOD_OUT) /module:$(MOD_OUT) /assume:byterecl
+FFLAGS_COMMON := /fpp /traceback /I modules /I modules\OrderPack /I $(MOD_OUT) /I "$(MKLROOT)\include\lapack95_ilp64" /module:$(MOD_OUT) /assume:byterecl
 
 FFLAGS_DEBUG := /Od /debug:full /check:all /warn:all
 FFLAGS_RELEASE := /O2 /Qmkl:sequential /Qdiag-disable:remark /libs:static /threads
