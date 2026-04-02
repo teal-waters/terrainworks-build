@@ -39,7 +39,8 @@ jobs:
       - name: Build
         shell: cmd
         run: |
-          set MKLROOT=C:\Miniconda\envs\test\Library
+          set "INCLUDE=%CONDA_PREFIX%\Library\include;%INCLUDE%"
+          set "LIB=%CONDA_PREFIX%\Library\lib;%LIB%"
           make -f Makefile.win
 
       - name: Get version

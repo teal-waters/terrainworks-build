@@ -28,7 +28,7 @@ MOD_OUT = built_mods
 #    Since these tools are not using multithreading I think this is fine, but
 #    we may need to revisit if future tools do use multithreading.
 
-FFLAGS_COMMON := /fpp /traceback /I modules /I modules\OrderPack /I $(MOD_OUT) /I "$(MKLROOT)\include\lapack95_ilp64" /module:$(MOD_OUT) /assume:byterecl
+FFLAGS_COMMON := /fpp /traceback /I modules /I modules\OrderPack /I $(MOD_OUT) /module:$(MOD_OUT) /assume:byterecl
 
 FFLAGS_DEBUG := /Od /debug:full /check:all /warn:all
 FFLAGS_RELEASE := /O2 /Qmkl:sequential /Qdiag-disable:remark /libs:static /threads
@@ -60,18 +60,18 @@ MODULE_OBJS = $(MODULES:.f90=.obj)
 SHARED_OBJS = $(filter-out GridUtilities/%, $(MODULE_OBJS))
 
 # On Windows, MKL ships .lib files rather than .a
-MKL_LAPACK95 = "$(MKLROOT)/lib/mkl_lapack95_ilp64.lib"
+# MKL_LAPACK95 = "$(MKLROOT)/lib/mkl_lapack95_ilp64.lib"
 
 all: bldgrds.exe MakeGrids.exe build_derivs.exe
 
 bldgrds.exe: $(MODULE_OBJS) | $(MOD_OUT)
-	$(FC) $(FFLAGS) GridUtilities/bldGrds2.o $(SHARED_OBJS) $(MKL_LAPACK95) -o bldgrds.exe
+	$(FC) $(FFLAGS) GridUtilities/bldGrds2.o $(SHARED_OBJS) -o bldgrds.exe
 
 MakeGrids.exe: $(MODULE_OBJS) | $(MOD_OUT)
-	$(FC) $(FFLAGS) GridUtilities/MakeGrids.o $(SHARED_OBJS) $(MKL_LAPACK95) -o MakeGrids.exe
+	$(FC) $(FFLAGS) GridUtilities/MakeGrids.o $(SHARED_OBJS) -o MakeGrids.exe
 
 build_derivs.exe: $(MODULE_OBJS) | $(MOD_OUT)
-	$(FC) $(FFLAGS) GridUtilities/build_derivs.o $(SHARED_OBJS) $(MKL_LAPACK95) -o build_derivs.exe
+	$(FC) $(FFLAGS) GridUtilities/build_derivs.o $(SHARED_OBJS) -o build_derivs.exe
 
 include deps.win.mk
 
