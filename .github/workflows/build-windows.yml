@@ -36,10 +36,12 @@ jobs:
       - name: Install Intel MKL
         run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl-devel==2025.2 --yes
 
+      - name: get conda info
+        run: conda info
+
       - name: Set MKLROOT
         shell: bash
         run: |
-          conda info
           echo "MKLROOT=C:\Miniconda\Library" >> $GITHUB_ENV
 
       - name: Build
