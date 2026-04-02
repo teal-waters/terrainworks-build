@@ -40,6 +40,8 @@ jobs:
         shell: bash
         run: |
           echo "MKLROOT=C:\Miniconda\envs\test\Library" >> $GITHUB_ENV
+          ls C:\Miniconda\envs\test
+          ls C:\Miniconda\envs\test\Library
 
       - name: Build
         shell: cmd
