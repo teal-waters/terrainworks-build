@@ -40,7 +40,7 @@ jobs:
         shell: cmd
         run: |
           set "INCLUDE=C:\Miniconda\envs\test\Library\include;%INCLUDE%"
-          set "INCLUDE=C:\Miniconda\envs\test\Library\lib;%LIB%"
+          set "LIB=C:\Miniconda\envs\test\Library\lib;%LIB%"
           make -f Makefile.win
 
       - name: Get version
