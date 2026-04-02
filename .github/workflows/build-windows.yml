@@ -27,6 +27,13 @@ jobs:
           compiler: intel
           version: '2025.2'
 
+      - name: Setup Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          python-version: "3.10"
+          activate-environment: my-env
+
       - name: Install Intel MKL
         run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl-devel==2025.2 --yes
 
