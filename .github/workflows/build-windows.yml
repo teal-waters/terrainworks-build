@@ -47,7 +47,9 @@ jobs:
 
       - name: Build
         shell: cmd
-        run: make -f Makefile.win
+        run: |
+          echo $MKLROOT
+          make -f Makefile.win
 
       - name: Get version
         id: get_version
