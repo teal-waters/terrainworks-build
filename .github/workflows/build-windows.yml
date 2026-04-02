@@ -36,19 +36,10 @@ jobs:
       - name: Install Intel MKL
         run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl-static==2025.2 --yes
 
-      - name: Set MKLROOT
-        shell: bash
-        run: |
-          echo "MKLROOT=C:\Miniconda\envs\test\Library" >> $GITHUB_ENV
-
-      - name: debug
-        run: | 
-          dir C:\Miniconda\envs\test\Library\lib
-
       - name: Build
         shell: cmd
         run: |
-          echo $MKLROOT
+          set MKLROOT=C:\Miniconda\envs\test\Library
           make -f Makefile.win
 
       - name: Get version
