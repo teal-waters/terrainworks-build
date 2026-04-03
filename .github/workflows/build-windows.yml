@@ -31,7 +31,6 @@ jobs:
         run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl==2025.2 mkl-devel==2025.2 mkl-static==2025.2 ifx_win-64==2025.2 --yes
 
       - name: Setup env
-        shell: cmd
         run: |
           echo MKLROOT=C:\Miniconda\envs\test\Library>> %GITHUB_ENV%
           echo PATH=C:\Miniconda\envs\test\Library\bin;%PATH%>> %GITHUB_ENV%
