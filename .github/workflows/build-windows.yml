@@ -30,14 +30,25 @@ jobs:
       - name: Install Intel compiler & libraries (primarily lapack is needed)
         run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl==2025.2 mkl-devel==2025.2 mkl-static==2025.2 ifx_win-64==2025.2 --yes
 
-      - name: Setup env
-        shell: pwsh
+      - name: Setup MKL + fix PATH
+        shell: cmd
         run: |
-          echo "MKLROOT=C:\Miniconda\envs\test\Library" >> $env:GITHUB_ENV
-          echo "C:\Miniconda\envs\test\Library\bin" >> $env:GITHUB_PATH
-          echo "INCLUDE=C:\Miniconda\envs\test\Library\include\intel64\ilp64;$env:INCLUDE" >> $env:GITHUB_ENV
-          # Prepend MSVC link.exe so it shadows Git's link, which ifx would otherwise pick up
-          (Get-ChildItem "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\*\bin\Hostx64\x64")[-1].FullName >> $env:GITHUB_PATH
+          REM --- MKL root ---
+          set MKLROOT=C:\Miniconda\envs\test\Library
+
+          REM --- INCLUDE (needed for lapack95.mod) ---
+          set INCLUDE=%MKLROOT%\include;%MKLROOT%\include\intel64\ilp64;%INCLUDE%
+
+          REM --- LIB (for linker) ---
+          set LIB=%MKLROOT%\lib;%LIB%
+
+          REM --- PATH (MKL runtime + remove bad linker) ---
+          set PATH=%MKLROOT%\bin;%PATH%
+          set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
+
+          REM --- sanity check ---
+          where link
+          where ifx
 
       - name: Build
         shell: cmd
