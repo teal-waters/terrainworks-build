@@ -37,6 +37,9 @@ jobs:
           echo "C:\Miniconda\envs\test\Library\bin" >> $env:GITHUB_PATH
           echo "INCLUDE=C:\Miniconda\envs\test\Library\include\intel64\ilp64;$env:INCLUDE" >> $env:GITHUB_ENV
 
+      # Ensures MSVC link.exe is on PATH before Git's link, which ifx would otherwise pick up
+      - uses: ilammy/msvc-dev-cmd@v1
+
       - name: Build
         shell: cmd
         run: make -f Makefile.win
