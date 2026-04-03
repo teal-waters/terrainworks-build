@@ -30,7 +30,7 @@ jobs:
       - name: Install Intel compiler & libraries (primarily lapack is needed)
         run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl==2025.2 mkl-devel==2025.2 mkl-static==2025.2 ifx_win-64==2025.2 --yes
 
-      - name: Setup MKL + fix PATH
+      - name: Build
         shell: cmd
         run: |
           REM --- MKL root ---
@@ -47,12 +47,7 @@ jobs:
           set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
 
           REM --- sanity check ---
-          where link
-          where ifx
-
-      - name: Build
-        shell: cmd
-        run: make -f Makefile.win
+          make -f Makefile.win
 
       - name: Get version
         id: get_version
