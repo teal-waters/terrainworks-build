@@ -34,6 +34,7 @@ jobs:
         shell: cmd
         run: |
           echo MKLROOT=C:\Miniconda\envs\test\Library>> %GITHUB_ENV%
+          echo PATH=C:\Miniconda\envs\test\bin;%PATH%>> %GITHUB_ENV%
           echo INCLUDE=C:\Miniconda\envs\test\Library\include\intel64\ilp64;%INCLUDE%>> %GITHUB_ENV%
 
       - name: Build
