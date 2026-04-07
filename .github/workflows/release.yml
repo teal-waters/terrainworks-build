@@ -18,16 +18,31 @@ jobs:
           submodules: recursive
           token: ${{ secrets.GH_PAT }}
 
-      - name: Build Docker image
-        run: docker build -t terrainworks-build:local .
+      - name: Setup Intel Fortran (ifx)
+        uses: fortran-lang/setup-fortran@v1
+        with:
+          compiler: intel
+          version: '2025.2'
 
-      - name: Extract binaries
+      - name: Setup Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          python-version: "3.10"
+
+      - name: Install Intel MKL
+        run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl==2025.2 mkl-devel==2025.2 mkl-static==2025.2 --yes
+
+      - name: Install makedepf90
+        run: sudo apt-get install -y makedepf90
+
+      - name: Setup env
         run: |
-          id=$(docker create terrainworks-build:local)
-          docker cp "$id:/code/bldgrds" ./bldgrds
-          docker cp "$id:/code/MakeGrids" ./MakeGrids
-          docker cp "$id:/code/build_derivs" ./build_derivs
-          docker rm "$id"
+          echo "MKLROOT=$CONDA_PREFIX" >> $GITHUB_ENV
+          echo "CPATH=$CONDA_PREFIX/include/intel64/ilp64" >> $GITHUB_ENV
+
+      - name: Build
+        run: make
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
