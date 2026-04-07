@@ -38,8 +38,9 @@ jobs:
 
       - name: Setup env
         run: |
-          echo "MKLROOT=$CONDA_PREFIX/lib" >> $GITHUB_ENV
-          echo "CPATH=$CONDA_PREFIX/include/intel64/ilp64" >> $GITHUB_ENV
+          CONDA_BASE=$(conda info --base)
+          echo "MKLROOT=$CONDA_BASE" >> $GITHUB_ENV
+          echo "CPATH=$CONDA_BASE/include/intel64/ilp64" >> $GITHUB_ENV
 
       - name: Build
         run: make
