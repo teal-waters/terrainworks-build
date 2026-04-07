@@ -5,6 +5,10 @@ built_mods
 *.log
 *.aux.xml
 venv
-./MakeGrids
-./bldgrds
+/MakeGrids
+/MakeGrids.exe
+/bldgrds
+/bldgrds.exe
+/build_derivs
+/build_derivs.exe
 deps.mk
