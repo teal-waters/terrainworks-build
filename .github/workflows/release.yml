@@ -38,7 +38,7 @@ jobs:
 
       - name: Setup env
         run: |
-          echo "MKLROOT=$CONDA_PREFIX" >> $GITHUB_ENV
+          echo "MKLROOT=$CONDA_PREFIX/lib" >> $GITHUB_ENV
           echo "CPATH=$CONDA_PREFIX/include/intel64/ilp64" >> $GITHUB_ENV
 
       - name: Build
