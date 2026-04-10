@@ -12,3 +12,4 @@ venv
 /build_derivs
 /build_derivs.exe
 deps.mk
+terrainworks_build/bin/
