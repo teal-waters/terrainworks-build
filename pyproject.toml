@@ -23,6 +23,3 @@ source = "vcs"
 
 [tool.hatch.build.hooks.vcs]
 version-file = "terrainworks_build/_version.py"
-
-[tool.hatch.build.hooks.custom]
-path = "scripts/hatch_build.py"
