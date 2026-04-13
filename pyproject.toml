@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "terrainworks-build"
 dynamic = ["version"]
-description = "TerrainWorks compiled binaries (MakeGrids, build_derivs)"
+description = "TerrainWorks compiled binaries"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -25,3 +25,4 @@ source = "vcs"
 version-file = "terrainworks_build/_version.py"
 
 [tool.hatch.build.hooks.custom]
+path = "scripts/hatch_build.py"
