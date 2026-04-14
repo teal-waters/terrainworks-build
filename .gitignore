@@ -1,3 +1,9 @@
+# Binary location
+terrainworks_build/bin/
+# Version file
+terrainworks_build/_version.py
+
+# Fortran files
 built_mods
 *.mod
 *.o
@@ -5,10 +11,17 @@ built_mods
 *.log
 *.aux.xml
 venv
+
+# linux dependency file
+deps.mk
+
+# Binaries
 /MakeGrids
 /MakeGrids.exe
 /bldgrds
 /bldgrds.exe
 /build_derivs
 /build_derivs.exe
-deps.mk
+
+# Python stuff
+__pycache__
