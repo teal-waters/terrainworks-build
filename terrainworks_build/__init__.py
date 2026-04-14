@@ -6,7 +6,6 @@ except ImportError:
     __version__ = "unknown"
 
 import platform
-import shutil
 import stat
 import urllib.request
 from pathlib import Path
@@ -32,14 +31,10 @@ def get_binary_path(name: str) -> str:
     is_windows = platform.system() == "Windows"
     filename = f"{name}.exe" if is_windows else name
     bin_dir = Path(__file__).parent / "bin"
-    bundled = bin_dir / filename
+    cached = bin_dir / filename
 
-    if bundled.exists():
-        return str(bundled)
-
-    on_path = shutil.which(name)
-    if on_path:
-        return on_path
+    if cached.exists():
+        return str(cached)
 
     if __version__ == "unknown":
         raise FileNotFoundError(
@@ -52,14 +47,14 @@ def get_binary_path(name: str) -> str:
     bin_dir.mkdir(exist_ok=True)
     print(f"Downloading {filename} from {TERRAINWORKS_REPO}@{tag}...")
     try:
-        urllib.request.urlretrieve(url, bundled)  # noqa: S310
+        urllib.request.urlretrieve(url, cached)  # noqa: S310
     except Exception as e:
-        bundled.unlink(missing_ok=True)
+        cached.unlink(missing_ok=True)
         raise FileNotFoundError(
             f"Failed to download {name!r} from {url}: {e}"
         ) from e
 
     if not is_windows:
-        bundled.chmod(bundled.stat().st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
+        cached.chmod(cached.stat().st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
 
-    return str(bundled)
+    return str(cached)
