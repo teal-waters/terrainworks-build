@@ -11,6 +11,22 @@ import urllib.request
 from pathlib import Path
 
 TERRAINWORKS_REPO = "teal-waters/terrainworks-build"
+# Records the package version under which the binaries in bin/ were downloaded.
+_VERSION_MARKER = ".version"
+
+
+def _cached_version(bin_dir: Path) -> str | None:
+    try:
+        return (bin_dir / _VERSION_MARKER).read_text(encoding="utf-8").strip()
+    except OSError:
+        return None
+
+
+def _write_version_marker(bin_dir: Path) -> None:
+    try:
+        (bin_dir / _VERSION_MARKER).write_text(__version__, encoding="utf-8")
+    except OSError:
+        pass
 
 
 def get_binary_path(name: str) -> str:
@@ -34,7 +50,17 @@ def get_binary_path(name: str) -> str:
     cached = bin_dir / filename
 
     if cached.exists():
-        return str(cached)
+        if __version__ != "unknown" and _cached_version(bin_dir) != __version__:
+            try:
+                cached.unlink()
+            except OSError:
+                print(
+                    f"Warning: could not remove stale {filename}; "
+                    "using existing binary."
+                )
+                return str(cached)
+        else:
+            return str(cached)
 
     if __version__ == "unknown":
         raise FileNotFoundError(
@@ -46,10 +72,12 @@ def get_binary_path(name: str) -> str:
     url = f"https://github.com/{TERRAINWORKS_REPO}/releases/download/{tag}/{filename}"
     bin_dir.mkdir(exist_ok=True)
     print(f"Downloading {filename} from {TERRAINWORKS_REPO}@{tag}...")
+    tmp = cached.with_suffix(".tmp")
     try:
-        urllib.request.urlretrieve(url, cached)  # noqa: S310
+        urllib.request.urlretrieve(url, tmp)  # noqa: S310
+        tmp.rename(cached)
     except Exception as e:
-        cached.unlink(missing_ok=True)
+        tmp.unlink(missing_ok=True)
         raise FileNotFoundError(
             f"Failed to download {name!r} from {url}: {e}"
         ) from e
@@ -57,4 +85,5 @@ def get_binary_path(name: str) -> str:
     if not is_windows:
         cached.chmod(cached.stat().st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
 
+    _write_version_marker(bin_dir)
     return str(cached)
