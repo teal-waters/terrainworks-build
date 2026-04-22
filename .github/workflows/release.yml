@@ -87,12 +87,13 @@ jobs:
         shell: cmd
         run: |
           echo MKLROOT=C:\Miniconda\envs\test\Library>> %GITHUB_ENV%
-          echo INCLUDE=C:\Miniconda\envs\test\Library\include\intel64\ilp64;%INCLUDE%>> %GITHUB_ENV%
+          echo INCLUDE=C:\Miniconda\envs\test\Library\include\intel64\lp64;%INCLUDE%>> %GITHUB_ENV%
           echo LIB=C:\Miniconda\envs\test\Library\lib;%LIB%>> %GITHUB_ENV%
+          echo MSYS2_ARG_CONV_EXCL=*>> %GITHUB_ENV%
 
       - name: Build
         shell: cmd
-        run: make -f Makefile.win
+        run: make.exe -f Makefile.win
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
