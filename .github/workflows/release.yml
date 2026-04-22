@@ -85,16 +85,18 @@ jobs:
 
       - name: Setup env
         shell: cmd
-        # MYSYS... is so bash stops escaping some things in the linker like \Fxxxxxx and \threads
         run: |
           echo MKLROOT=C:\Miniconda\envs\test\Library>> %GITHUB_ENV%
           echo INCLUDE=C:\Miniconda\envs\test\Library\include\intel64\lp64;%INCLUDE%>> %GITHUB_ENV%
           echo LIB=C:\Miniconda\envs\test\Library\lib;%LIB%>> %GITHUB_ENV%
-          echo MSYS2_ARG_CONV_EXCL="*">> %GITHUB_ENV% 
 
       - name: Build
         shell: cmd
-        run: make -f Makefile.win
+        # Use the full path to Chocolatey's native Windows make (GnuWin32) rather than
+        # relying on PATH resolution, which would pick up Git's MSYS2-based make first.
+        # Git's make translates /flag-style args to Windows paths (e.g. /F268435456 becomes
+        # C:\Program Files\Git\F268435456), breaking ifx linker flags like /F and /link.
+        run: C:\ProgramData\Chocolatey\bin\make.exe -f Makefile.win
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
