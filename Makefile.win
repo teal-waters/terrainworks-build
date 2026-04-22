@@ -65,20 +65,22 @@ MKL_CORE_LIBS = "$(MKLROOT)/lib/mkl_intel_lp64.lib" "$(MKLROOT)/lib/mkl_sequenti
 
 all: bldgrds.exe MakeGrids.exe build_derivs.exe
 
-LDFLAGS := /libs:static /threads
+LDFLAGS := /libs:static
 # TraceChannels in ChannelNode_Module is recursive and can recurse deeply for
 # large watersheds. Windows defaults to a 1 MB stack (vs 8 MB on Linux), so
 # we explicitly reserve 256 MB to prevent stack overflow.
+# Use /F rather than /link /STACK to avoid POSIX path translation of "link"
+# on Git bash / GitHub Actions runners.
 STACK_SIZE := 268435456
 
 bldgrds.exe: $(MODULE_OBJS) | $(MOD_OUT)
-	$(FC) $(LDFLAGS) GridUtilities/bldGrds2.obj $(MKL_LAPACK95) $(MKL_CORE_LIBS) $(SHARED_OBJS) -o bldgrds.exe /link /STACK:$(STACK_SIZE)
+	$(FC) $(LDFLAGS) /F$(STACK_SIZE) GridUtilities/bldGrds2.obj $(MKL_LAPACK95) $(MKL_CORE_LIBS) $(SHARED_OBJS) -o bldgrds.exe
 
 MakeGrids.exe: $(MODULE_OBJS) | $(MOD_OUT)
-	$(FC) $(LDFLAGS) GridUtilities/MakeGrids.obj $(MKL_LAPACK95) $(MKL_CORE_LIBS) $(SHARED_OBJS) -o MakeGrids.exe /link /STACK:$(STACK_SIZE)
+	$(FC) $(LDFLAGS) /F$(STACK_SIZE) GridUtilities/MakeGrids.obj $(MKL_LAPACK95) $(MKL_CORE_LIBS) $(SHARED_OBJS) -o MakeGrids.exe
 
 build_derivs.exe: $(MODULE_OBJS) | $(MOD_OUT)
-	$(FC) $(LDFLAGS) GridUtilities/build_derivs.obj $(MKL_LAPACK95) $(MKL_CORE_LIBS) $(SHARED_OBJS) -o build_derivs.exe /link /STACK:$(STACK_SIZE)
+	$(FC) $(LDFLAGS) /F$(STACK_SIZE) GridUtilities/build_derivs.obj $(MKL_LAPACK95) $(MKL_CORE_LIBS) $(SHARED_OBJS) -o build_derivs.exe
 
 include deps.win.mk
 
