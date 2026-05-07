@@ -58,7 +58,7 @@ MODULES = modules/data_modules.f90 modules/error_handler.f90 \
 					modules/maxheap.f90 modules/utils.f90 modules/kernel_module.f90 \
 					modules/derivs_module.f90 modules/surface_fit.f90 \
 					modules/OrderPack/refsor.f90 modules/OrderPack/mrgrnk.f90 \
-					GridUtilities/build_derivs.f90 \
+					GridUtilities/build_derivs/build_derivs.f90 \
 					GridUtilities/MakeGrids.f90 \
 					GridUtilities/bldGrds2.f90
 
