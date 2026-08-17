@@ -1,6 +1,6 @@
 # terrainworks-build
 
-The goal of this repository is to have a reproducible setup to compile TerrainWorks fortran code and create releases of selected binaries (currently "MakeGrids" and "bldgrds2"). These binaries are currently available for Linux and Windows. It includes the `modules` and `GridUtilites` repositories as submodules, so its basic components are a Makefile and a Dockerfile. This repository also contains a python package which allows programmatic access to built binaries for use in "wrappers", etc.
+The goal of this repository is to have a reproducible setup to compile TerrainWorks fortran code and create releases of selected binaries (currently `MakeGrids` and `bldgrds2`). These binaries are currently available for Linux and Windows. It includes the `modules` and `GridUtilites` repositories as submodules, so its basic components are a Makefile and a Dockerfile. This repository also contains a python package which allows programmatic access to built binaries for use in "wrappers", etc.
 
 ## Python package
 
