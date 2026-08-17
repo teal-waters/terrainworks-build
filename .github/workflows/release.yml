@@ -79,8 +79,8 @@ jobs:
           python-version: "3.10"
 
       - name: Install Intel MKL
-        # It's tempting to use this to also install ifx, but I could never get the path set correctly for the link
-        # binary....need to remove the git-based link from path and I couldn't figure out how.
+        # Installing ifx via conda is tempting, but fortran-lang/setup-fortran is used instead to avoid
+        # PATH conflicts with Git's link binary (see "Remove Git link from PATH" step below).
         run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl==2025.2 mkl-devel==2025.2 mkl-static==2025.2 --yes
 
       - name: Setup env
@@ -90,6 +90,12 @@ jobs:
           echo INCLUDE=C:\Miniconda\envs\test\Library\include\intel64\lp64;%INCLUDE%>> %GITHUB_ENV%
           echo LIB=C:\Miniconda\envs\test\Library\lib;%LIB%>> %GITHUB_ENV%
           echo MSYS2_ARG_CONV_EXCL=*>> %GITHUB_ENV%
+
+      - name: Remove Git link from PATH
+        shell: powershell
+        run: |
+          $paths = $env:PATH -split ';' | Where-Object { $_ -notmatch '\\Git\\usr\\bin' -and $_ -notmatch '\\Git\\bin' }
+          echo "PATH=$($paths -join ';')" >> $env:GITHUB_ENV
 
       - name: Build
         shell: cmd
