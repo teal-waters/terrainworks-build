@@ -22,7 +22,7 @@ jobs:
         uses: fortran-lang/setup-fortran@v1
         with:
           compiler: intel
-          version: '2025.2'
+          version: '2026.1'
 
       - name: Setup Conda
         uses: conda-incubator/setup-miniconda@v3
@@ -31,7 +31,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install Intel MKL
-        run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl==2025.2 mkl-devel==2025.2 mkl-static==2025.2 --yes
+        run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl==2026.1 mkl-devel==2026.1 mkl-static==2026.1 --yes
 
       - name: Install makedepf90
         run: sudo apt-get install -y makedepf90
@@ -70,7 +70,7 @@ jobs:
         uses: fortran-lang/setup-fortran@v1
         with:
           compiler: intel
-          version: '2025.2'
+          version: '2026.1'
 
       - name: Setup Conda
         uses: conda-incubator/setup-miniconda@v3
@@ -79,9 +79,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install Intel MKL
-        # Installing ifx via conda is tempting, but fortran-lang/setup-fortran is used instead to avoid
-        # PATH conflicts with Git's link binary (see "Remove Git link from PATH" step below).
-        run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl==2025.2 mkl-devel==2025.2 mkl-static==2025.2 --yes
+        run: conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge mkl==2026.1 mkl-devel==2026.1 mkl-static==2026.1 --yes
 
       - name: Setup env
         shell: cmd
@@ -90,12 +88,6 @@ jobs:
           echo INCLUDE=C:\Miniconda\envs\test\Library\include\intel64\lp64;%INCLUDE%>> %GITHUB_ENV%
           echo LIB=C:\Miniconda\envs\test\Library\lib;%LIB%>> %GITHUB_ENV%
           echo MSYS2_ARG_CONV_EXCL=*>> %GITHUB_ENV%
-
-      - name: Remove Git link from PATH
-        shell: powershell
-        run: |
-          $paths = $env:PATH -split ';' | Where-Object { $_ -notmatch '\\Git\\usr\\bin' -and $_ -notmatch '\\Git\\bin' }
-          echo "PATH=$($paths -join ';')" >> $env:GITHUB_ENV
 
       - name: Build
         shell: cmd
