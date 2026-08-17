@@ -18,6 +18,9 @@ jobs:
           submodules: recursive
           token: ${{ secrets.GH_PAT }}
 
+      # ifx and MKL versions must stay in sync.
+      # Newer ifx versions have not been tested — code incompatibilities in the modules/
+      # submodule prevented upgrading beyond 2025.2 as of August 2026.
       - name: Setup Intel Fortran (ifx)
         uses: fortran-lang/setup-fortran@v1
         with:
@@ -55,6 +58,8 @@ jobs:
             build_derivs
 
   build-windows:
+    # Pinned to windows-2022 (VS 2022) — ifx 2025.2 is not compatible with VS 2026,
+    # which is what windows-latest now uses. Revisit when ifx is upgraded.
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
