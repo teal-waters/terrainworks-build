@@ -50,7 +50,8 @@ Then commit the submodule pointer changes:
 
 ### Release a new version
 
-Tag the commit with a version number (please see existing releases/tags for the next version):
+After updating submodules, committing, and merging a pull-request to the main branch,
+tag the commit with a version number (please see existing releases/tags for the next version):
 
 `git tag v1.2.3 && git push origin v1.2.3`
 
