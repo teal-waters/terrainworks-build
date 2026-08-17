@@ -1,10 +1,10 @@
 # terrainworks-build
 
-The goal of this repository is to have a reproducible setup to compile TerrainWorks fortran code and create releases of selected binaries (currently "MakeGrids" and "bldgrds2"). It includes the `modules` and `GridUtilites` repositories as submodules, so its basic components are a Makefile and a Dockerfile. This repository also contains a python package which allows programmatic access to built binaries for use in "wrappers", etc.
+The goal of this repository is to have a reproducible setup to compile TerrainWorks fortran code and create releases of selected binaries (currently "MakeGrids" and "bldgrds2"). These binaries are currently available for Linux and Windows. It includes the `modules` and `GridUtilites` repositories as submodules, so its basic components are a Makefile and a Dockerfile. This repository also contains a python package which allows programmatic access to built binaries for use in "wrappers", etc.
 
 ## Python package
 
-The `terrainworks-build` package provides Python access to selected binaries. It is published to the teal-waters Azure Artifacts feed.
+The `terrainworks-build` package provides Python access to selected binaries in Linux and Windows. It is published to the teal-waters Azure Artifacts feed.
 
 ### Package Installation
 
@@ -30,7 +30,7 @@ run([makegrids, "makegrids_config.txt"])
 
 ## Updating binaries
 
-Follow this process if new functionality is available in the submodules and you wish to release a new version of this package with the updates.
+Follow this process if new functionality is available in the submodules and you wish to release a new version of this package with the updates. This process does not require local development, and can be completed on all platforms.
 
 ### Update submodules
 
