@@ -34,9 +34,15 @@ Follow this process if new functionality is available in the submodules and you 
 
 ### Update submodules
 
-Assuming submodules are on the correct branch, we can point to the most current commits using:
+First, clone this repository, then run
 
-`git pull --recurse-submodules`.
+`git submodule update --init --recursive`
+
+to initialize submodules.
+
+Next, point to the most current submodule commits using:
+
+`git submodule update --remote --recursive`
 
 Then commit the submodule pointer changes:
 
