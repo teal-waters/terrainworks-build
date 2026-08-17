@@ -1,10 +1,10 @@
 # terrainworks-build
 
-The goal of this repository is to have a reproducible setup to compile TerrainWorks fortran code and create releases of selected binaries (currently "MakeGrids" and "bldgrds2"). It includes the `modules` and `GridUtilites` repositories as submodules, so its basic components are a Makefile and a Dockerfile.
+The goal of this repository is to have a reproducible setup to compile TerrainWorks fortran code and create releases of selected binaries (currently "MakeGrids" and "bldgrds2"). It includes the `modules` and `GridUtilites` repositories as submodules, so its basic components are a Makefile and a Dockerfile. This repository also contains a python package which allows programmatic access to built binaries for use in "wrappers", etc.
 
 ## Python package
 
-The `terrainworks-build` package provides Python access to TerrainWorks algorithms. It is published to the teal-waters Azure Artifacts feed.
+The `terrainworks-build` package provides Python access to selected binaries. It is published to the teal-waters Azure Artifacts feed.
 
 ### Package Installation
 
@@ -30,11 +30,11 @@ run([makegrids, "makegrids_config.txt"])
 
 ## Updating binaries
 
-This is the process if new functionality is available in the submodules and you wish to release a new version of this package with the updates.
+Follow this process if new functionality is available in the submodules and you wish to release a new version of this package with the updates.
 
 ### Update submodules
 
-Assuming submodules are on the correct branch, they can be updated using
+Assuming submodules are on the correct branch, we can point to the most current commits using:
 
 `git pull --recurse-submodules`.
 
@@ -44,7 +44,7 @@ Then commit the submodule pointer changes:
 
 ### Release a new version
 
-Tag the commit with a version number (please see existing releases for the next version):
+Tag the commit with a version number (please see existing releases/tags for the next version):
 
 `git tag v1.2.3 && git push origin v1.2.3`
 
