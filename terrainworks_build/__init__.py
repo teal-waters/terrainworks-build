@@ -11,20 +11,20 @@ import urllib.request
 from pathlib import Path
 
 TERRAINWORKS_REPO = "teal-waters/terrainworks-build"
-# Records the package version under which the binaries in bin/ were downloaded.
-_VERSION_MARKER = ".version"
 
 
-def _cached_version(bin_dir: Path) -> str | None:
+def _cached_version(bin_dir: Path, filename: str) -> str | None:
+    """Read the version marker for a specific binary."""
     try:
-        return (bin_dir / _VERSION_MARKER).read_text(encoding="utf-8").strip()
+        return (bin_dir / f".{filename}.version").read_text(encoding="utf-8").strip()
     except OSError:
         return None
 
 
-def _write_version_marker(bin_dir: Path) -> None:
+def _write_version_marker(bin_dir: Path, filename: str) -> None:
+    """Write the current package version as the version marker for a specific binary."""
     try:
-        (bin_dir / _VERSION_MARKER).write_text(__version__, encoding="utf-8")
+        (bin_dir / f".{filename}.version").write_text(__version__, encoding="utf-8")
     except OSError:
         pass
 
@@ -50,7 +50,7 @@ def get_binary_path(name: str) -> str:
     cached = bin_dir / filename
 
     if cached.exists():
-        if __version__ != "unknown" and _cached_version(bin_dir) != __version__:
+        if __version__ != "unknown" and _cached_version(bin_dir, filename) != __version__:
             try:
                 cached.unlink()
             except OSError:
@@ -75,7 +75,7 @@ def get_binary_path(name: str) -> str:
     tmp = cached.with_suffix(".tmp")
     try:
         urllib.request.urlretrieve(url, tmp)  # noqa: S310
-        tmp.rename(cached)
+        tmp.replace(cached)
     except Exception as e:
         tmp.unlink(missing_ok=True)
         raise FileNotFoundError(
@@ -85,5 +85,5 @@ def get_binary_path(name: str) -> str:
     if not is_windows:
         cached.chmod(cached.stat().st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
 
-    _write_version_marker(bin_dir)
+    _write_version_marker(bin_dir, filename)
     return str(cached)
