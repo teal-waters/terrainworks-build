@@ -29,6 +29,12 @@ def _write_version_marker(bin_dir: Path, filename: str) -> None:
         pass
 
 
+def _bin_dir() -> Path:
+    # Kept as a separate function (not inlined) so tests can patch the bin
+    # directory via patch("terrainworks_build._bin_dir", return_value=tmp_path).
+    return Path(__file__).parent / "bin"
+
+
 def get_binary_path(name: str) -> str:
     """Locate a terrainworks binary, downloading it on first use if needed.
 
@@ -46,7 +52,7 @@ def get_binary_path(name: str) -> str:
     """
     is_windows = platform.system() == "Windows"
     filename = f"{name}.exe" if is_windows else name
-    bin_dir = Path(__file__).parent / "bin"
+    bin_dir = _bin_dir()
     cached = bin_dir / filename
 
     if cached.exists():
