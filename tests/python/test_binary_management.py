@@ -142,7 +142,8 @@ def test_version_marker_not_written_on_download_failure(bin_env):
 
 def test_unknown_version_raises_when_no_binary(tmp_path):
     with patch("terrainworks_build._bin_dir", return_value=tmp_path), \
-         patch.object(tw, "__version__", "unknown"):
+         patch.object(tw, "__version__", "unknown"), \
+         patch("terrainworks_build.urllib.request.urlretrieve", side_effect=OSError("no such release")):
         with pytest.raises(FileNotFoundError, match="unknown"):
             tw.get_binary_path("bldgrds")
 
