@@ -56,7 +56,10 @@ def get_binary_path(name: str) -> str:
     cached = bin_dir / filename
 
     if cached.exists():
-        if __version__ != "unknown" and _cached_version(bin_dir, filename) != __version__:
+        if (
+            __version__ != "unknown"
+            and _cached_version(bin_dir, filename) != __version__
+        ):
             try:
                 cached.unlink()
             except OSError:
@@ -84,9 +87,7 @@ def get_binary_path(name: str) -> str:
         tmp.replace(cached)
     except Exception as e:
         tmp.unlink(missing_ok=True)
-        raise FileNotFoundError(
-            f"Failed to download {name!r} from {url}: {e}"
-        ) from e
+        raise FileNotFoundError(f"Failed to download {name!r} from {url}: {e}") from e
 
     if not is_windows:
         cached.chmod(cached.stat().st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)

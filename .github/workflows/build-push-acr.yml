@@ -87,7 +87,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
-      
+
       - name: Output image details
         run: |
           echo "### Docker Image Published" >> $GITHUB_STEP_SUMMARY
