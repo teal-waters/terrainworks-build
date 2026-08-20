@@ -8,12 +8,18 @@ dynamic = ["version"]
 description = "TerrainWorks compiled binaries"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = [
-]
+dependencies = []
 
 [dependency-groups]
 dev = [
+    "pre-commit>=4.2.0",
+    "pyright>=1.1.411",
+    "pytest>=9.1.1",
+    "ruff>=0.16.4",
 ]
+
+[tool.pyright]
+typeCheckingMode = "standard"
 
 [tool.hatch.build.targets.wheel]
 packages = ["terrainworks_build"]
